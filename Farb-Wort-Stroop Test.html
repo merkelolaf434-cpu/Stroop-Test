@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Color–Word Stroop Test – Mobile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --surface: #ffffff;
+      --accent: #0070c9;
+      --text: #111111;
+      --text-muted: #6e6e73;
+      --border: #d2d2d7;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.12);
+      --font-body: -apple-system, BlinkMacSystemFont, system-ui, -system-ui, "SF Pro Text",
+        "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: radial-gradient(circle at top, #ffffff 0, #f0f0f4 42%, #e5e5ea 100%);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .shell {
+      max-width: 960px;
+      width: 100%;
+      background: linear-gradient(135deg, #ffffff, #fafafc);
+      border-radius: 32px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      padding: 24px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 480px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding-inline: 4px;
+    }
+
+    .title-block h1 {
+      font-size: 1.2rem;
+      letter-spacing: 0.03em;
+      font-weight: 600;
+    }
+
+    .title-block p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .meta-pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .meta-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #34c759;
+    }
+
+    main {
+      background: var(--surface);
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      padding: 18px 14px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      height: 100%;
+    }
+
+    .screen h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .screen p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      max-width: 60ch;
+    }
+
+    .kbd-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .kbd-map {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #f5f5f7;
+      border: 1px solid #e5e5ea;
+    }
+
+    kbd {
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      padding: 3px 6px;
+      border-radius: 6px;
+      border: 1px solid #d2d2d7;
+      background: #ffffff;
+      font-size: 0.75rem;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    button {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease,
+        color 140ms ease, border-color 140ms ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 6px 18px rgba(0, 112, 201, 0.33);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(0, 112, 201, 0.4);
+    }
+
+    .btn-secondary {
+      background: #f5f5f7;
+      color: var(--text);
+      border: 1px solid #d2d2d7;
+    }
+
+    .btn-secondary:hover {
+      background: #ebebf0;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      font-size: 0.8rem;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(0, 0, 0, 0.03);
+      border-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .stimulus-shell {
+      flex: 1;
+      border-radius: 18px;
+      border: 1px solid #e5e5ea;
+      background: radial-gradient(circle at top, #ffffff 0, #f5f5f7 40%, #f0f0f4 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 8px;
+    }
+
+    .stimulus {
+      font-size: 2.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-align: center;
+      user-select: none;
+    }
+
+    .fixation {
+      font-size: 2.6rem;
+      font-weight: 400;
+      user-select: none;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .status-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #f5f5f7;
+      border: 1px solid #e5e5ea;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .progress-text {
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Touch-Button-Reihe */
+    .response-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .resp-btn {
+      border-radius: 999px;
+      border: none;
+      padding: 12px 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #ffffff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+      min-height: 44px;
+      touch-action: manipulation;
+    }
+
+    .resp-red {
+      background: #ff3b30;
+    }
+
+    .resp-green {
+      background: #34c759;
+    }
+
+    .resp-blue {
+      background: #007aff;
+    }
+
+    .resp-yellow {
+      background: #ffcc00;
+      color: #3c2e00;
+    }
+
+    .resp-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .summary-card {
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: #f5f5f7;
+      border: 1px solid #e5e5ea;
+    }
+
+    .summary-card h3 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 2px;
+    }
+
+    .summary-card p {
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    .note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      max-width: 70ch;
+    }
+
+    .note strong {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .admin-panel {
+      margin-top: 6px;
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: #f5f5f7;
+      border: 1px dashed #d2d2d7;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: none;
+    }
+
+    .admin-panel pre {
+      font-size: 0.73rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      margin-top: 4px;
+    }
+
+    @media (min-width: 768px) {
+      .shell {
+        padding: 28px 24px 22px;
+      }
+      .stimulus {
+        font-size: 3.2rem;
+      }
+      .fixation {
+        font-size: 3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="title-block">
+        <h1>Color–Word Stroop Test</h1>
+        <p>Mobile Umsetzung basierend auf Ilbak&nbsp;et&nbsp;al., 2026 (Stroop-Mentalfatigue).</p>
+      </div>
+      <div class="meta-pill">
+        <span class="meta-dot"></span>
+        <span>≈ 30&nbsp;min · 1,100 trials</span>
+      </div>
+    </header>
+
+    <main>
+      <!-- Intro Screen -->
+      <section id="screen-intro" class="screen active">
+        <h2>Instruktion</h2>
+        <p>
+          Deine Aufgabe ist es, <strong>immer so schnell und korrekt wie möglich auf die
+          <em>FARBE</em> des Wortes</strong> zu reagieren und dabei die Wortbedeutung zu ignorieren.
+        </p>
+        <p>
+          Tippe dazu auf dem Smartphone auf das passende <strong>Farbfeld</strong> oder nutze bei
+          einer Tastatur die zugehörige Taste:
+        </p>
+
+        <div class="kbd-row">
+          <div class="kbd-map">
+            <kbd>F</kbd>
+            <span>Rot</span>
+          </div>
+          <div class="kbd-map">
+            <kbd>G</kbd>
+            <span>Grün</span>
+          </div>
+          <div class="kbd-map">
+            <kbd>J</kbd>
+            <span>Blau</span>
+          </div>
+          <div class="kbd-map">
+            <kbd>K</kbd>
+            <span>Gelb</span>
+          </div>
+        </div>
+
+        <p class="note">
+          Jeder Trial: <strong>1.000&nbsp;ms</strong> Wortanzeige, danach <strong>636&nbsp;ms</strong> Fixationskreuz.
+          Insgesamt <strong>1.100 Trials</strong> mit zufälliger Mischung von kongruent, inkongruent und neutral,
+          zeitlich angelehnt an das Protokoll von Ilbak&nbsp;et&nbsp;al.&nbsp;2026. [file:13]
+        </p>
+
+        <div class="btn-row">
+          <button class="btn-primary" id="btn-start-practice">
+            Übungsblock starten
+          </button>
+          <button class="btn-secondary" id="btn-start-main">
+            Direkt Hauptblock starten
+          </button>
+          <button class="btn-secondary" id="btn-enter-fullscreen" type="button">
+            Optional: Vollbild
+          </button>
+        </div>
+
+        <button class="btn-ghost" id="btn-toggle-admin" type="button">
+          Konfiguration anzeigen
+        </button>
+        <div class="admin-panel" id="admin-panel"></div>
+      </section>
+
+      <!-- Experiment Screen -->
+      <section id="screen-experiment" class="screen">
+        <div class="stimulus-shell">
+          <div id="stimulus" class="stimulus"></div>
+          <div id="fixation" class="fixation" style="display: none;">+</div>
+        </div>
+
+        <!-- Touch-Buttons -->
+        <div class="response-row">
+          <button class="resp-btn resp-red" data-color="RED">Rot</button>
+          <button class="resp-btn resp-green" data-color="GREEN">Grün</button>
+          <button class="resp-btn resp-blue" data-color="BLUE">Blau</button>
+          <button class="resp-btn resp-yellow" data-color="YELLOW">Gelb</button>
+        </div>
+
+        <div class="status-row">
+          <div class="status-left">
+            <div class="pill">
+              <span class="pill-dot"></span>
+              <span id="status-phase">Übung</span>
+            </div>
+            <span id="status-condition"></span>
+          </div>
+          <div>
+            <span class="progress-text" id="status-progress"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pause Screen -->
+      <section id="screen-pause" class="screen">
+        <h2>Kurze Pause</h2>
+        <p>
+          Du hast einen Block abgeschlossen. Entspanne kurz die Hände. Wenn du bereit bist,
+          tippe auf den Button unten, um fortzufahren.
+        </p>
+        <p id="pause-info" class="note"></p>
+        <div class="btn-row">
+          <button class="btn-primary" id="btn-resume">
+            Weiter zum nächsten Block
+          </button>
+        </div>
+      </section>
+
+      <!-- End Screen -->
+      <section id="screen-end" class="screen">
+        <h2>Experiment abgeschlossen</h2>
+        <p>
+          Vielen Dank für deine Teilnahme. Unten findest du eine kurze Zusammenfassung sowie
+          CSV‑Exporte für Trialdaten und Summary.
+        </p>
+
+        <div class="summary-grid">
+          <div class="summary-card">
+            <h3>Gültige Antworten</h3>
+            <p id="sum-valid">–</p>
+          </div>
+          <div class="summary-card">
+            <h3>Ø RT korrekt</h3>
+            <p id="sum-rt">–</p>
+          </div>
+          <div class="summary-card">
+            <h3>Fehlerquote</h3>
+            <p id="sum-error">–</p>
+          </div>
+          <div class="summary-card">
+            <h3>No-Response</h3>
+            <p id="sum-nr">–</p>
+          </div>
+        </div>
+
+        <div class="summary-grid" style="margin-top: 8px;">
+          <div class="summary-card">
+            <h3>RT kongruent</h3>
+            <p id="sum-rt-cong">–</p>
+          </div>
+          <div class="summary-card">
+            <h3>RT inkongruent</h3>
+            <p id="sum-rt-incong">–</p>
+          </div>
+          <div class="summary-card">
+            <h3>Interferenz</h3>
+            <p id="sum-interf">–</p>
+          </div>
+        </div>
+
+        <div class="btn-row" style="margin-top: 12px;">
+          <button class="btn-primary" id="btn-download-trials">
+            Trial-Daten als CSV
+          </button>
+          <button class="btn-secondary" id="btn-download-summary">
+            Summary als CSV
+          </button>
+        </div>
+
+        <p class="note" style="margin-top: 8px;">
+          Hinweis: Die Originalstudie verwendete Tastaturantworten auf einem Laptop; hier werden
+          zusätzlich Touch‑Antworten verwendet, das kognitive Prinzip (Farbwahl, RT, Fehler) bleibt
+          identisch. [file:13]
+        </p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const CONFIG = {
+      practiceTrials: 12,
+      mainTrials: 1100,
+      pauseEvery: 275,
+      stimDurationMs: 1000,
+      fixationMs: 636,
+      colors: [
+        { name: "RED", css: "#ff3b30", key: "f", label: "Rot" },
+        { name: "GREEN", css: "#34c759", key: "g", label: "Grün" },
+        { name: "BLUE", css: "#007aff", key: "j", label: "Blau" },
+        { name: "YELLOW", css: "#ffcc00", key: "k", label: "Gelb" }
+      ],
+      neutralWords: ["XXXX", "BOOK", "HOUSE", "CHAIR"]
+    };
+
+    const state = {
+      phase: "intro", // intro | practice | main | pause | end
+      trialIndex: 0,
+      practiceIndex: 0,
+      trials: [],
+      practiceTrials: [],
+      awaitingResponse: false,
+      currentStimulusOnset: null,
+      currentTrial: null,
+      respondedThisTrial: false,
+      results: [],
+      blockCounter: 0
+    };
+
+    const el = {
+      screens: {
+        intro: document.getElementById("screen-intro"),
+        experiment: document.getElementById("screen-experiment"),
+        pause: document.getElementById("screen-pause"),
+        end: document.getElementById("screen-end")
+      },
+      stimulus: document.getElementById("stimulus"),
+      fixation: document.getElementById("fixation"),
+      statusPhase: document.getElementById("status-phase"),
+      statusCondition: document.getElementById("status-condition"),
+      statusProgress: document.getElementById("status-progress"),
+      pauseInfo: document.getElementById("pause-info"),
+      adminPanel: document.getElementById("admin-panel"),
+      sumValid: document.getElementById("sum-valid"),
+      sumRT: document.getElementById("sum-rt"),
+      sumError: document.getElementById("sum-error"),
+      sumNR: document.getElementById("sum-nr"),
+      sumRTCong: document.getElementById("sum-rt-cong"),
+      sumRTIncong: document.getElementById("sum-rt-incong"),
+      sumInterf: document.getElementById("sum-interf")
+    };
+
+    function showScreen(name) {
+      Object.values(el.screens).forEach(s => s.classList.remove("active"));
+      el.screens[name].classList.add("active");
+    }
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function randomItem(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function generateStroopTrials(n) {
+      const trials = [];
+      const conditions = ["congruent", "incongruent", "neutral"];
+      const basePerCond = Math.floor(n / conditions.length);
+      let remaining = n - basePerCond * conditions.length;
+      const perCond = {};
+      conditions.forEach((c, idx) => {
+        perCond[c] = basePerCond + (idx < remaining ? 1 : 0);
+      });
+
+      conditions.forEach(cond => {
+        for (let i = 0; i < perCond[cond]; i++) {
+          if (cond === "congruent") {
+            const color = randomItem(CONFIG.colors);
+            trials.push({
+              condition: "congruent",
+              word: color.name,
+              inkColor: color.name,
+              inkCss: color.css
+            });
+          } else if (cond === "incongruent") {
+            const wordColor = randomItem(CONFIG.colors);
+            let inkColor;
+            do {
+              inkColor = randomItem(CONFIG.colors);
+            } while (inkColor.name === wordColor.name);
+            trials.push({
+              condition: "incongruent",
+              word: wordColor.name,
+              inkColor: inkColor.name,
+              inkCss: inkColor.css
+            });
+          } else {
+            const inkColor = randomItem(CONFIG.colors);
+            const neutralWord = randomItem(CONFIG.neutralWords);
+            trials.push({
+              condition: "neutral",
+              word: neutralWord,
+              inkColor: inkColor.name,
+              inkCss: inkColor.css
+            });
+          }
+        }
+      });
+
+      return shuffle(trials);
+    }
+
+    function setupAdminPanel() {
+      const data = {
+        timing: {
+          stimMs: CONFIG.stimDurationMs,
+          fixationMs: CONFIG.fixationMs,
+          mainTrials: CONFIG.mainTrials,
+          pauseEvery: CONFIG.pauseEvery
+        },
+        input: {
+          touchButtons: true,
+          keyboardMapping: CONFIG.colors.map(c => ({ key: c.key, color: c.name }))
+        }
+      };
+      const pre = document.createElement("pre");
+      pre.textContent = JSON.stringify(data, null, 2);
+      el.adminPanel.innerHTML = "";
+      el.adminPanel.appendChild(
+        document.createTextNode("Konfiguration (Timing & Eingabe):")
+      );
+      el.adminPanel.appendChild(pre);
+    }
+
+    function startPractice() {
+      state.phase = "practice";
+      state.practiceTrials = generateStroopTrials(CONFIG.practiceTrials);
+      state.practiceIndex = 0;
+      state.blockCounter = 0;
+      el.statusPhase.textContent = "Übung";
+      showScreen("experiment");
+      nextTrial();
+    }
+
+    function startMain() {
+      state.phase = "main";
+      state.trials = generateStroopTrials(CONFIG.mainTrials);
+      state.trialIndex = 0;
+      state.blockCounter = 0;
+      el.statusPhase.textContent = "Hauptblock";
+      showScreen("experiment");
+      nextTrial();
+    }
+
+    function scheduleNextTrial() {
+      el.stimulus.style.display = "none";
+      el.fixation.style.display = "block";
+
+      setTimeout(() => {
+        el.fixation.style.display = "none";
+        nextTrial();
+      }, CONFIG.fixationMs);
+    }
+
+    function nextTrial() {
+      state.awaitingResponse = false;
+      state.currentStimulusOnset = null;
+      state.respondedThisTrial = false;
+      state.currentTrial = null;
+
+      if (state.phase === "practice") {
+        if (state.practiceIndex >= state.practiceTrials.length) {
+          showScreen("intro");
+          alert("Übungsblock abgeschlossen. Du kannst nun den Hauptblock starten.");
+          return;
+        }
+        const t = state.practiceTrials[state.practiceIndex];
+        state.currentTrial = { ...t, isPractice: true, index: state.practiceIndex };
+        state.practiceIndex += 1;
+        renderTrial(state.currentTrial);
+        return;
+      }
+
+      if (state.phase === "main") {
+        if (state.trialIndex >= state.trials.length) {
+          finishExperiment();
+          return;
+        }
+
+        if (state.trialIndex > 0 && state.trialIndex % CONFIG.pauseEvery === 0) {
+          state.phase = "pause";
+          state.blockCounter += 1;
+          const completed = state.trialIndex;
+          el.pauseInfo.textContent =
+            `Bisher absolvierte Trials: ${completed} von ${CONFIG.mainTrials}.`;
+          showScreen("pause");
+          return;
+        }
+
+        const t = state.trials[state.trialIndex];
+        state.currentTrial = { ...t, isPractice: false, index: state.trialIndex };
+        state.trialIndex += 1;
+        renderTrial(state.currentTrial);
+        return;
+      }
+    }
+
+    function renderTrial(trial) {
+      el.statusCondition.textContent =
+        trial.isPractice ? "Übungstrial" : `Bedingung: ${trial.condition}`;
+      if (state.phase === "main") {
+        el.statusProgress.textContent =
+          `Trial ${trial.index + 1} / ${CONFIG.mainTrials}`;
+      } else if (state.phase === "practice") {
+        el.statusProgress.textContent =
+          `Übung ${trial.index + 1} / ${CONFIG.practiceTrials}`;
+      } else {
+        el.statusProgress.textContent = "";
+      }
+
+      el.stimulus.textContent = trial.word;
+      el.stimulus.style.color = trial.inkCss;
+      el.stimulus.style.display = "block";
+      el.fixation.style.display = "none";
+
+      state.awaitingResponse = true;
+      state.respondedThisTrial = false;
+      state.currentStimulusOnset = performance.now();
+
+      setTimeout(() => {
+        if (!state.respondedThisTrial) {
+          logTrialResult({ source: "none", key: null, colorName: null });
+        }
+        state.awaitingResponse = false;
+        scheduleNextTrial();
+      }, CONFIG.stimDurationMs);
+    }
+
+    function logTrialResult({ source, key, colorName }) {
+      if (!state.currentTrial) return;
+
+      const mapping = {};
+      CONFIG.colors.forEach(c => {
+        mapping[c.key] = c.name;
+      });
+
+      let rt = null;
+      let correct = null;
+      let noResponse = false;
+      let pressedColorName = null;
+      let pressedKey = null;
+
+      if (source === "none") {
+        noResponse = true;
+        correct = false;
+      } else if (source === "key") {
+        pressedKey = key;
+        pressedColorName = mapping[key] || null;
+        rt = performance.now() - state.currentStimulusOnset;
+        const expectedColorName = state.currentTrial.inkColor;
+        correct = pressedColorName === expectedColorName;
+      } else if (source === "touch") {
+        pressedColorName = colorName;
+        rt = performance.now() - state.currentStimulusOnset;
+        const expectedColorName = state.currentTrial.inkColor;
+        correct = pressedColorName === expectedColorName;
+      }
+
+      const trialRecord = {
+        timestamp: new Date().toISOString(),
+        phase: state.currentTrial.isPractice ? "practice" : "main",
+        trialIndex: state.currentTrial.index,
+        condition: state.currentTrial.condition,
+        word: state.currentTrial.word,
+        inkColor: state.currentTrial.inkColor,
+        responseSource: source,
+        pressedKey: pressedKey,
+        pressedColor: pressedColorName,
+        correct: correct,
+        noResponse: noResponse,
+        reactionTimeMs: rt
+      };
+
+      state.results.push(trialRecord);
+    }
+
+    function handleKeydown(e) {
+      if (!state.awaitingResponse) return;
+      const key = e.key.toLowerCase();
+      const allowed = CONFIG.colors.map(c => c.key);
+      if (!allowed.includes(key)) return;
+      if (state.respondedThisTrial) return;
+
+      state.respondedThisTrial = true;
+      logTrialResult({ source: "key", key, colorName: null });
+    }
+
+    function handleTouch(colorName) {
+      if (!state.awaitingResponse) return;
+      if (state.respondedThisTrial) return;
+
+      state.respondedThisTrial = true;
+      logTrialResult({ source: "touch", key: null, colorName });
+    }
+
+    function finishExperiment() {
+      state.phase = "end";
+      showScreen("end");
+      computeSummary();
+    }
+
+    function computeSummary() {
+      const mainTrials = state.results.filter(r => r.phase === "main");
+      const valid = mainTrials.filter(r => !r.noResponse);
+      const correct = valid.filter(r => r.correct);
+      const incorrect = valid.filter(r => !r.correct);
+      const noResp = mainTrials.filter(r => r.noResponse);
+
+      const mean = arr => {
+        if (!arr.length) return null;
+        return arr.reduce((s, x) => s + x, 0) / arr.length;
+      };
+
+      const meanRTAllCorrect = mean(correct.map(r => r.reactionTimeMs).filter(x => x != null));
+
+      const fmtMs = ms => (ms == null ? "–" : `${Math.round(ms)} ms`);
+      const fmtPct = val => `${val.toFixed(1)} %`;
+
+      el.sumValid.textContent = valid.length.toString();
+      el.sumRT.textContent = fmtMs(meanRTAllCorrect);
+      const errorPct = valid.length ? (incorrect.length / valid.length) * 100 : 0;
+      el.sumError.textContent = fmtPct(errorPct);
+      const nrPct = mainTrials.length ? (noResp.length / mainTrials.length) * 100 : 0;
+      el.sumNR.textContent = `${noResp.length} (${fmtPct(nrPct)})`;
+
+      const cong = correct.filter(r => r.condition === "congruent");
+      const incong = correct.filter(r => r.condition === "incongruent");
+      const meanCong = mean(cong.map(r => r.reactionTimeMs));
+      const meanIncong = mean(incong.map(r => r.reactionTimeMs));
+      el.sumRTCong.textContent = fmtMs(meanCong);
+      el.sumRTIncong.textContent = fmtMs(meanIncong);
+      const interf = meanIncong != null && meanCong != null ? meanIncong - meanCong : null;
+      el.sumInterf.textContent = fmtMs(interf);
+    }
+
+    function downloadCSV(filename, rows) {
+      const process = v => {
+        if (v == null) return "";
+        const s = String(v);
+        if (s.includes(",") || s.includes('"') || s.includes("\n")) {
+          return `"${s.replace(/"/g, '""')}"`;
+        }
+        return s;
+      };
+
+      const csv = rows.map(r => r.map(process).join(",")).join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function exportTrials() {
+      const header = [
+        "timestamp",
+        "phase",
+        "trialIndex",
+        "condition",
+        "word",
+        "inkColor",
+        "responseSource",
+        "pressedKey",
+        "pressedColor",
+        "correct",
+        "noResponse",
+        "reactionTimeMs"
+      ];
+      const rows = [header];
+      state.results.forEach(r => {
+        rows.push([
+          r.timestamp,
+          r.phase,
+          r.trialIndex,
+          r.condition,
+          r.word,
+          r.inkColor,
+          r.responseSource,
+          r.pressedKey,
+          r.pressedColor,
+          r.correct,
+          r.noResponse,
+          r.reactionTimeMs != null ? Math.round(r.reactionTimeMs) : ""
+        ]);
+      });
+      downloadCSV("stroop_trials_mobile.csv", rows);
+    }
+
+    function exportSummary() {
+      const mainTrials = state.results.filter(r => r.phase === "main");
+      const valid = mainTrials.filter(r => !r.noResponse);
+      const correct = valid.filter(r => r.correct);
+      const incorrect = valid.filter(r => !r.correct);
+      const noResp = mainTrials.filter(r => r.noResponse);
+
+      const mean = arr => {
+        if (!arr.length) return null;
+        return arr.reduce((s, x) => s + x, 0) / arr.length;
+      };
+
+      const cong = correct.filter(r => r.condition === "congruent");
+      const incong = correct.filter(r => r.condition === "incongruent");
+      const meanCong = mean(cong.map(r => r.reactionTimeMs));
+      const meanIncong = mean(incong.map(r => r.reactionTimeMs));
+      const interf = meanIncong != null && meanCong != null ? meanIncong - meanCong : null;
+
+      const summaryRows = [
+        ["metric", "value"],
+        ["mainTrials_total", mainTrials.length],
+        ["valid_responses", valid.length],
+        ["correct", correct.length],
+        ["incorrect", incorrect.length],
+        ["no_response", noResp.length],
+        [
+          "mean_rt_correct_ms",
+          correct.length ? Math.round(mean(correct.map(r => r.reactionTimeMs))) : ""
+        ],
+        [
+          "error_rate_percent",
+          valid.length ? ((incorrect.length / valid.length) * 100).toFixed(2) : ""
+        ],
+        [
+          "no_response_rate_percent",
+          mainTrials.length ? ((noResp.length / mainTrials.length) * 100).toFixed(2) : ""
+        ],
+        ["mean_rt_congruent_ms", meanCong != null ? Math.round(meanCong) : ""],
+        ["mean_rt_incongruent_ms", meanIncong != null ? Math.round(meanIncong) : ""],
+        ["interference_incong_minus_cong_ms", interf != null ? Math.round(interf) : ""]
+      ];
+
+      downloadCSV("stroop_summary_mobile.csv", summaryRows);
+    }
+
+    // Event-Listener
+    document.getElementById("btn-start-practice").addEventListener("click", startPractice);
+    document.getElementById("btn-start-main").addEventListener("click", startMain);
+    document.getElementById("btn-resume").addEventListener("click", () => {
+      state.phase = "main";
+      showScreen("experiment");
+      nextTrial();
+    });
+    document.getElementById("btn-download-trials").addEventListener("click", exportTrials);
+    document.getElementById("btn-download-summary").addEventListener("click", exportSummary);
+
+    document.getElementById("btn-toggle-admin").addEventListener("click", () => {
+      const panel = el.adminPanel;
+      panel.style.display = panel.style.display === "block" ? "none" : "block";
+    });
+
+    document.getElementById("btn-enter-fullscreen").addEventListener("click", () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    });
+
+    document.addEventListener("keydown", handleKeydown);
+
+    // Touch-Buttons
+    document.querySelectorAll(".resp-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const colorName = btn.getAttribute("data-color");
+        handleTouch(colorName);
+      });
+    });
+
+    setupAdminPanel();
+  </script>
+</body>
+</html>
