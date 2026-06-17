@@ -1,23 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>Color–Word Stroop Test – Mobile</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Farb-Wort Stroop Test – Smartphone</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <style>
     :root {
       --bg: #f5f5f7;
       --surface: #ffffff;
       --accent: #0070c9;
+      --accent-soft: #e5f0ff;
       --text: #111111;
       --text-muted: #6e6e73;
       --border: #d2d2d7;
-      --radius-lg: 18px;
+      --error: #ff3b30;
+      --radius-lg: 16px;
       --radius-md: 12px;
       --radius-sm: 8px;
-      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.12);
-      --font-body: -apple-system, BlinkMacSystemFont, system-ui, -system-ui, "SF Pro Text",
-        "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+      --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.16);
+      --font-body: -apple-system, BlinkMacSystemFont, system-ui, -system-ui,
+        "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
     }
 
     * {
@@ -32,59 +34,55 @@
 
     body {
       font-family: var(--font-body);
-      background: radial-gradient(circle at top, #ffffff 0, #f0f0f4 42%, #e5e5ea 100%);
+      background: radial-gradient(circle at top, #ffffff 0, #f1f1f6 40%, #e5e5ea 100%);
       color: var(--text);
       display: flex;
-      align-items: center;
       justify-content: center;
-      padding: 12px;
+      align-items: stretch;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
       -webkit-font-smoothing: antialiased;
     }
 
-    .shell {
-      max-width: 960px;
+    .app {
       width: 100%;
-      background: linear-gradient(135deg, #ffffff, #fafafc);
-      border-radius: 32px;
+      max-width: 460px;
+      margin: auto;
+      background: linear-gradient(145deg, #ffffff, #fafafc);
+      border-radius: 24px;
       box-shadow: var(--shadow-soft);
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      padding: 24px 18px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.9);
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      min-height: 480px;
+      padding: 14px 14px 10px;
     }
 
     header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding-inline: 4px;
+      padding: 4px 6px 8px;
     }
 
-    .title-block h1 {
-      font-size: 1.2rem;
-      letter-spacing: 0.03em;
+    header h1 {
+      font-size: 1.1rem;
       font-weight: 600;
+      letter-spacing: 0.04em;
     }
 
-    .title-block p {
-      font-size: 0.85rem;
+    header p {
+      font-size: 0.8rem;
       color: var(--text-muted);
       margin-top: 2px;
     }
 
     .meta-pill {
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      font-size: 0.7rem;
-      color: var(--text-muted);
+      margin-top: 6px;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(255, 255, 255, 0.9);
+      font-size: 0.7rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(245, 245, 247, 0.9);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      color: var(--text-muted);
     }
 
     .meta-dot {
@@ -95,64 +93,76 @@
     }
 
     main {
-      background: var(--surface);
-      border-radius: 24px;
-      border: 1px solid var(--border);
-      padding: 18px 14px 14px;
+      flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      flex: 1;
+      gap: 8px;
+      margin-top: 4px;
     }
 
     .screen {
       display: none;
+      flex: 1;
+      flex-direction: column;
+      padding: 8px;
+      border-radius: 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
     }
 
     .screen.active {
       display: flex;
-      flex-direction: column;
-      gap: 12px;
-      height: 100%;
     }
 
     .screen h2 {
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 600;
-      letter-spacing: 0.02em;
+      margin-bottom: 4px;
     }
 
     .screen p {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
-      max-width: 60ch;
+    }
+
+    .scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+      padding-top: 2px;
+    }
+
+    .note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 6px;
     }
 
     .kbd-row {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
       gap: 6px;
-      flex-wrap: wrap;
       margin-top: 8px;
     }
 
     .kbd-map {
-      display: inline-flex;
+      display: flex;
       align-items: center;
       gap: 6px;
       font-size: 0.8rem;
-      padding: 4px 8px;
+      padding: 6px 8px;
       border-radius: 999px;
       background: #f5f5f7;
       border: 1px solid #e5e5ea;
     }
 
     kbd {
-      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.75rem;
       padding: 3px 6px;
       border-radius: 6px;
       border: 1px solid #d2d2d7;
       background: #ffffff;
-      font-size: 0.75rem;
       box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
     }
 
@@ -166,7 +176,7 @@
     button {
       border-radius: 999px;
       border: none;
-      padding: 8px 16px;
+      padding: 9px 14px;
       font-size: 0.9rem;
       letter-spacing: 0.01em;
       cursor: pointer;
@@ -174,8 +184,8 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease,
-        color 140ms ease, border-color 140ms ease;
+      transition: transform 120ms ease, box-shadow 120ms ease,
+        background 120ms ease, color 120ms ease;
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -187,13 +197,12 @@
     .btn-primary {
       background: var(--accent);
       color: #ffffff;
-      box-shadow: 0 6px 18px rgba(0, 112, 201, 0.33);
-      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 6px 18px rgba(0, 112, 201, 0.4);
     }
 
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 22px rgba(0, 112, 201, 0.4);
+    .btn-primary:active {
+      transform: translateY(1px) scale(0.98);
+      box-shadow: 0 3px 10px rgba(0, 112, 201, 0.4);
     }
 
     .btn-secondary {
@@ -202,39 +211,26 @@
       border: 1px solid #d2d2d7;
     }
 
-    .btn-secondary:hover {
-      background: #ebebf0;
-    }
-
-    .btn-ghost {
-      background: transparent;
-      color: var(--text-muted);
-      border: 1px solid transparent;
-      font-size: 0.8rem;
-    }
-
-    .btn-ghost:hover {
-      background: rgba(0, 0, 0, 0.03);
-      border-color: rgba(0, 0, 0, 0.05);
+    .btn-secondary:active {
+      transform: translateY(1px) scale(0.98);
     }
 
     .stimulus-shell {
       flex: 1;
-      border-radius: 18px;
+      border-radius: 16px;
       border: 1px solid #e5e5ea;
-      background: radial-gradient(circle at top, #ffffff 0, #f5f5f7 40%, #f0f0f4 100%);
+      background: radial-gradient(circle at 20% 0%, #ffffff 0, #f5f5f7 40%, #f0f0f4 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
-      overflow: hidden;
-      padding: 8px;
+      margin-bottom: 8px;
+      min-height: 180px;
     }
 
     .stimulus {
-      font-size: 2.8rem;
+      font-size: 2.3rem;
       font-weight: 600;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       text-align: center;
       user-select: none;
@@ -250,27 +246,19 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 8px;
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .status-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
+      margin-bottom: 4px;
     }
 
     .pill {
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: #f5f5f7;
-      border: 1px solid #e5e5ea;
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: #f5f5f7;
+      border: 1px solid #e5e5ea;
     }
 
     .pill-dot {
@@ -284,318 +272,256 @@
       font-variant-numeric: tabular-nums;
     }
 
-    /* Touch-Button-Reihe */
-    .response-row {
+    .response-bar {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
-      margin-top: 8px;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 6px;
+      margin-top: 4px;
     }
 
     .resp-btn {
-      border-radius: 999px;
-      border: none;
-      padding: 12px 10px;
+      min-height: 54px; /* >= 44x44px Touch-Target */
+      border-radius: 14px;
+      border: 1px solid #d2d2d7;
       font-size: 0.95rem;
-      font-weight: 600;
+      font-weight: 500;
       color: #ffffff;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
-      min-height: 44px;
-      touch-action: manipulation;
+      position: relative;
+      overflow: hidden;
     }
 
-    .resp-red {
-      background: #ff3b30;
+    .resp-btn span {
+      position: relative;
+      z-index: 1;
     }
 
-    .resp-green {
-      background: #34c759;
-    }
-
-    .resp-blue {
-      background: #007aff;
-    }
-
-    .resp-yellow {
-      background: #ffcc00;
-      color: #3c2e00;
-    }
+    .resp-red { background: #ff3b30; }
+    .resp-green { background: #34c759; }
+    .resp-blue { background: #007aff; }
+    .resp-yellow { background: #ffcc00; color: #5c3b00; }
 
     .resp-btn:active {
-      transform: translateY(1px);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+      transform: scale(0.97);
+      box-shadow: inset 0 0 0 999px rgba(0,0,0,0.12);
+    }
+
+    .bottom-note {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 4px;
     }
 
     .summary-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: repeat(2,minmax(0,1fr));
       gap: 8px;
       margin-top: 10px;
     }
 
     .summary-card {
-      padding: 8px 10px;
-      border-radius: 14px;
+      border-radius: 12px;
       background: #f5f5f7;
       border: 1px solid #e5e5ea;
+      padding: 8px 9px 7px;
     }
 
     .summary-card h3 {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
+      font-size: 0.7rem;
       letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
       margin-bottom: 2px;
     }
 
     .summary-card p {
-      color: var(--text);
       font-size: 0.9rem;
-    }
-
-    .note {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      max-width: 70ch;
-    }
-
-    .note strong {
-      font-weight: 600;
       color: var(--text);
     }
 
-    .admin-panel {
-      margin-top: 6px;
-      padding: 8px 10px;
-      border-radius: 14px;
-      background: #f5f5f7;
-      border: 1px dashed #d2d2d7;
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      display: none;
-    }
-
-    .admin-panel pre {
-      font-size: 0.73rem;
-      white-space: pre-wrap;
-      word-break: break-word;
-      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      margin-top: 4px;
-    }
-
-    @media (min-width: 768px) {
-      .shell {
-        padding: 28px 24px 22px;
-      }
+    @media (min-width: 480px) {
       .stimulus {
-        font-size: 3.2rem;
+        font-size: 2.6rem;
       }
-      .fixation {
-        font-size: 3rem;
-      }
+      .resp-btn { min-height: 60px; }
     }
   </style>
 </head>
 <body>
-  <div class="shell">
+  <div class="app">
     <header>
-      <div class="title-block">
-        <h1>Color–Word Stroop Test</h1>
-        <p>Mobile Umsetzung basierend auf Ilbak&nbsp;et&nbsp;al., 2026 (Stroop-Mentalfatigue).</p>
-      </div>
+      <h1>Farb-Wort Stroop Test</h1>
+      <p>Smartphone-optimierte Umsetzung des mental-fatigue-Stroop-Protokolls (Ilbak&nbsp;et&nbsp;al., 2026).</p>
       <div class="meta-pill">
         <span class="meta-dot"></span>
-        <span>≈ 30&nbsp;min · 1,100 trials</span>
+        <span>≈ 30&nbsp;min · 1.100 Versuche</span>
       </div>
     </header>
 
     <main>
-      <!-- Intro Screen -->
+      <!-- Intro -->
       <section id="screen-intro" class="screen active">
-        <h2>Instruktion</h2>
-        <p>
-          Deine Aufgabe ist es, <strong>immer so schnell und korrekt wie möglich auf die
-          <em>FARBE</em> des Wortes</strong> zu reagieren und dabei die Wortbedeutung zu ignorieren.
-        </p>
-        <p>
-          Tippe dazu auf dem Smartphone auf das passende <strong>Farbfeld</strong> oder nutze bei
-          einer Tastatur die zugehörige Taste:
-        </p>
+        <div class="scroll">
+          <h2>Kurze Anleitung</h2>
+          <p>
+            Deine Aufgabe ist es, <strong>immer auf die FARBE des Wortes</strong> zu tippen, nicht auf die Wortbedeutung.
+            Tippe so schnell und so korrekt wie möglich auf den passenden Farb-Button.
+          </p>
 
-        <div class="kbd-row">
-          <div class="kbd-map">
-            <kbd>F</kbd>
-            <span>Rot</span>
+          <p class="note">
+            Jede Reizpräsentation dauert 1.000&nbsp;ms, danach folgt ein Fixationskreuz für 636&nbsp;ms.
+            Insgesamt werden 1.100 Trials in zufälliger Reihenfolge aus kongruenten, inkongruenten und neutralen
+            Bedingungen präsentiert – entsprechend der Studienbeschreibung. [file:13]
+          </p>
+
+          <p style="margin-top:8px;">Die Farb-Buttons:</p>
+          <div class="kbd-row">
+            <div class="kbd-map"><span style="display:inline-block;width:10px;height:10px;border-radius:999px;background:#ff3b30;"></span> <span>Rot</span></div>
+            <div class="kbd-map"><span style="display:inline-block;width:10px;height:10px;border-radius:999px;background:#34c759;"></span> <span>Grün</span></div>
+            <div class="kbd-map"><span style="display:inline-block;width:10px;height:10px;border-radius:999px;background:#007aff;"></span> <span>Blau</span></div>
+            <div class="kbd-map"><span style="display:inline-block;width:10px;height:10px;border-radius:999px;background:#ffcc00;"></span> <span>Gelb</span></div>
           </div>
-          <div class="kbd-map">
-            <kbd>G</kbd>
-            <span>Grün</span>
-          </div>
-          <div class="kbd-map">
-            <kbd>J</kbd>
-            <span>Blau</span>
-          </div>
-          <div class="kbd-map">
-            <kbd>K</kbd>
-            <span>Gelb</span>
-          </div>
+
+          <p class="note">
+            Hinweis: Der Test ist für Smartphones optimiert (große Touch-Buttons ≥ 44×44&nbsp;px), funktioniert aber auch am Laptop. [web:39][web:42][web:48][web:51]
+          </p>
         </div>
-
-        <p class="note">
-          Jeder Trial: <strong>1.000&nbsp;ms</strong> Wortanzeige, danach <strong>636&nbsp;ms</strong> Fixationskreuz.
-          Insgesamt <strong>1.100 Trials</strong> mit zufälliger Mischung von kongruent, inkongruent und neutral,
-          zeitlich angelehnt an das Protokoll von Ilbak&nbsp;et&nbsp;al.&nbsp;2026. [file:13]
-        </p>
 
         <div class="btn-row">
-          <button class="btn-primary" id="btn-start-practice">
-            Übungsblock starten
-          </button>
-          <button class="btn-secondary" id="btn-start-main">
-            Direkt Hauptblock starten
-          </button>
-          <button class="btn-secondary" id="btn-enter-fullscreen" type="button">
-            Optional: Vollbild
-          </button>
+          <button id="btn-start-practice" class="btn-primary">Kurz üben</button>
+          <button id="btn-skip-practice" class="btn-secondary">Direkt Hauptblock</button>
         </div>
-
-        <button class="btn-ghost" id="btn-toggle-admin" type="button">
-          Konfiguration anzeigen
-        </button>
-        <div class="admin-panel" id="admin-panel"></div>
       </section>
 
-      <!-- Experiment Screen -->
+      <!-- Experiment -->
       <section id="screen-experiment" class="screen">
+        <div class="status-row">
+          <div class="pill">
+            <span class="pill-dot"></span>
+            <span id="status-phase">Übung</span>
+          </div>
+          <span id="status-progress" class="progress-text"></span>
+        </div>
+
         <div class="stimulus-shell">
           <div id="stimulus" class="stimulus"></div>
-          <div id="fixation" class="fixation" style="display: none;">+</div>
+          <div id="fixation" class="fixation" style="display:none;">+</div>
         </div>
 
-        <!-- Touch-Buttons -->
-        <div class="response-row">
-          <button class="resp-btn resp-red" data-color="RED">Rot</button>
-          <button class="resp-btn resp-green" data-color="GREEN">Grün</button>
-          <button class="resp-btn resp-blue" data-color="BLUE">Blau</button>
-          <button class="resp-btn resp-yellow" data-color="YELLOW">Gelb</button>
+        <div class="response-bar">
+          <button class="resp-btn resp-red" data-color="RED"><span>Rot</span></button>
+          <button class="resp-btn resp-green" data-color="GREEN"><span>Grün</span></button>
+          <button class="resp-btn resp-blue" data-color="BLUE"><span>Blau</span></button>
+          <button class="resp-btn resp-yellow" data-color="YELLOW"><span>Gelb</span></button>
         </div>
 
-        <div class="status-row">
-          <div class="status-left">
-            <div class="pill">
-              <span class="pill-dot"></span>
-              <span id="status-phase">Übung</span>
-            </div>
-            <span id="status-condition"></span>
-          </div>
-          <div>
-            <span class="progress-text" id="status-progress"></span>
-          </div>
-        </div>
+        <p class="bottom-note">
+          Tippe so schnell wie möglich auf die passende Farbe. Wenn du nicht rechtzeitig tippst, wird der Versuch als „keine Antwort“ gezählt.
+        </p>
       </section>
 
-      <!-- Pause Screen -->
+      <!-- Pause -->
       <section id="screen-pause" class="screen">
-        <h2>Kurze Pause</h2>
-        <p>
-          Du hast einen Block abgeschlossen. Entspanne kurz die Hände. Wenn du bereit bist,
-          tippe auf den Button unten, um fortzufahren.
-        </p>
-        <p id="pause-info" class="note"></p>
+        <div class="scroll">
+          <h2>Kurze Pause</h2>
+          <p>
+            Du hast einen Block abgeschlossen. Entspanne kurz die Hände und nimm den Blick vom Bildschirm.
+            Wenn du bereit bist, tippe auf „Weiter“.
+          </p>
+          <p id="pause-info" class="note"></p>
+        </div>
+
         <div class="btn-row">
-          <button class="btn-primary" id="btn-resume">
-            Weiter zum nächsten Block
-          </button>
+          <button id="btn-resume" class="btn-primary">Weiter</button>
         </div>
       </section>
 
-      <!-- End Screen -->
+      <!-- End -->
       <section id="screen-end" class="screen">
-        <h2>Experiment abgeschlossen</h2>
-        <p>
-          Vielen Dank für deine Teilnahme. Unten findest du eine kurze Zusammenfassung sowie
-          CSV‑Exporte für Trialdaten und Summary.
-        </p>
+        <div class="scroll">
+          <h2>Test abgeschlossen</h2>
+          <p>
+            Danke für deine Teilnahme. Unten siehst du eine Zusammenfassung deiner Leistung. 
+            Die Daten bleiben nur in diesem Browser und können als CSV exportiert werden.
+          </p>
 
-        <div class="summary-grid">
-          <div class="summary-card">
-            <h3>Gültige Antworten</h3>
-            <p id="sum-valid">–</p>
+          <div class="summary-grid">
+            <div class="summary-card">
+              <h3>Gültige Antworten</h3>
+              <p id="sum-valid">–</p>
+            </div>
+            <div class="summary-card">
+              <h3>Ø RT korrekt</h3>
+              <p id="sum-rt">–</p>
+            </div>
+            <div class="summary-card">
+              <h3>Fehlerquote</h3>
+              <p id="sum-error">–</p>
+            </div>
+            <div class="summary-card">
+              <h3>No-Response</h3>
+              <p id="sum-nr">–</p>
+            </div>
           </div>
-          <div class="summary-card">
-            <h3>Ø RT korrekt</h3>
-            <p id="sum-rt">–</p>
+
+          <div class="summary-grid" style="margin-top:8px;">
+            <div class="summary-card">
+              <h3>RT kongruent</h3>
+              <p id="sum-rt-cong">–</p>
+            </div>
+            <div class="summary-card">
+              <h3>RT inkongruent</h3>
+              <p id="sum-rt-incong">–</p>
+            </div>
+            <div class="summary-card">
+              <h3>Interferenz</h3>
+              <p id="sum-interf">–</p>
+            </div>
+            <div class="summary-card">
+              <h3>Trials gesamt</h3>
+              <p id="sum-total">–</p>
+            </div>
           </div>
-          <div class="summary-card">
-            <h3>Fehlerquote</h3>
-            <p id="sum-error">–</p>
-          </div>
-          <div class="summary-card">
-            <h3>No-Response</h3>
-            <p id="sum-nr">–</p>
-          </div>
+
+          <p class="note" style="margin-top:8px;">
+            Protokoll-nahe Umsetzung: 1.100 Trials, 1.000&nbsp;ms Stimulus, 636&nbsp;ms Fixation, vier Farben und drei Bedingungen (kongruent, inkongruent, neutral), ungef. 30&nbsp;Minuten Dauer. [file:13]
+          </p>
         </div>
 
-        <div class="summary-grid" style="margin-top: 8px;">
-          <div class="summary-card">
-            <h3>RT kongruent</h3>
-            <p id="sum-rt-cong">–</p>
-          </div>
-          <div class="summary-card">
-            <h3>RT inkongruent</h3>
-            <p id="sum-rt-incong">–</p>
-          </div>
-          <div class="summary-card">
-            <h3>Interferenz</h3>
-            <p id="sum-interf">–</p>
-          </div>
+        <div class="btn-row">
+          <button id="btn-download-trials" class="btn-primary">Trial-Daten (CSV)</button>
+          <button id="btn-download-summary" class="btn-secondary">Summary (CSV)</button>
         </div>
-
-        <div class="btn-row" style="margin-top: 12px;">
-          <button class="btn-primary" id="btn-download-trials">
-            Trial-Daten als CSV
-          </button>
-          <button class="btn-secondary" id="btn-download-summary">
-            Summary als CSV
-          </button>
-        </div>
-
-        <p class="note" style="margin-top: 8px;">
-          Hinweis: Die Originalstudie verwendete Tastaturantworten auf einem Laptop; hier werden
-          zusätzlich Touch‑Antworten verwendet, das kognitive Prinzip (Farbwahl, RT, Fehler) bleibt
-          identisch. [file:13]
-        </p>
       </section>
     </main>
   </div>
 
   <script>
+    // Konfiguration (angepasst an das Protokoll von Ilbak et al. 2026) [file:13]
     const CONFIG = {
       practiceTrials: 12,
       mainTrials: 1100,
-      pauseEvery: 275,
+      pauseEvery: 275, // 4 Blöcke
       stimDurationMs: 1000,
       fixationMs: 636,
       colors: [
-        { name: "RED", css: "#ff3b30", key: "f", label: "Rot" },
-        { name: "GREEN", css: "#34c759", key: "g", label: "Grün" },
-        { name: "BLUE", css: "#007aff", key: "j", label: "Blau" },
-        { name: "YELLOW", css: "#ffcc00", key: "k", label: "Gelb" }
+        { name: "RED", css: "#ff3b30", label: "Rot" },
+        { name: "GREEN", css: "#34c759", label: "Grün" },
+        { name: "BLUE", css: "#007aff", label: "Blau" },
+        { name: "YELLOW", css: "#ffcc00", label: "Gelb" }
       ],
       neutralWords: ["XXXX", "BOOK", "HOUSE", "CHAIR"]
     };
 
     const state = {
       phase: "intro", // intro | practice | main | pause | end
-      trialIndex: 0,
+      trialsPractice: [],
+      trialsMain: [],
       practiceIndex: 0,
-      trials: [],
-      practiceTrials: [],
-      awaitingResponse: false,
-      currentStimulusOnset: null,
+      mainIndex: 0,
       currentTrial: null,
+      awaitingResponse: false,
       respondedThisTrial: false,
+      stimulusOnset: null,
       results: [],
       blockCounter: 0
     };
@@ -610,17 +536,16 @@
       stimulus: document.getElementById("stimulus"),
       fixation: document.getElementById("fixation"),
       statusPhase: document.getElementById("status-phase"),
-      statusCondition: document.getElementById("status-condition"),
       statusProgress: document.getElementById("status-progress"),
       pauseInfo: document.getElementById("pause-info"),
-      adminPanel: document.getElementById("admin-panel"),
       sumValid: document.getElementById("sum-valid"),
       sumRT: document.getElementById("sum-rt"),
       sumError: document.getElementById("sum-error"),
       sumNR: document.getElementById("sum-nr"),
       sumRTCong: document.getElementById("sum-rt-cong"),
       sumRTIncong: document.getElementById("sum-rt-incong"),
-      sumInterf: document.getElementById("sum-interf")
+      sumInterf: document.getElementById("sum-interf"),
+      sumTotal: document.getElementById("sum-total")
     };
 
     function showScreen(name) {
@@ -640,46 +565,46 @@
       return arr[Math.floor(Math.random() * arr.length)];
     }
 
-    function generateStroopTrials(n) {
+    function generateTrials(n) {
       const trials = [];
-      const conditions = ["congruent", "incongruent", "neutral"];
-      const basePerCond = Math.floor(n / conditions.length);
-      let remaining = n - basePerCond * conditions.length;
+      const conds = ["congruent", "incongruent", "neutral"];
+      const base = Math.floor(n / conds.length);
+      let rest = n - base * conds.length;
       const perCond = {};
-      conditions.forEach((c, idx) => {
-        perCond[c] = basePerCond + (idx < remaining ? 1 : 0);
+      conds.forEach((c, idx) => {
+        perCond[c] = base + (idx < rest ? 1 : 0);
       });
 
-      conditions.forEach(cond => {
+      conds.forEach(cond => {
         for (let i = 0; i < perCond[cond]; i++) {
           if (cond === "congruent") {
-            const color = randomItem(CONFIG.colors);
+            const col = randomItem(CONFIG.colors);
             trials.push({
               condition: "congruent",
-              word: color.name,
-              inkColor: color.name,
-              inkCss: color.css
+              word: col.name,
+              inkColor: col.name,
+              inkCss: col.css
             });
           } else if (cond === "incongruent") {
-            const wordColor = randomItem(CONFIG.colors);
-            let inkColor;
+            const wordCol = randomItem(CONFIG.colors);
+            let inkCol;
             do {
-              inkColor = randomItem(CONFIG.colors);
-            } while (inkColor.name === wordColor.name);
+              inkCol = randomItem(CONFIG.colors);
+            } while (inkCol.name === wordCol.name);
             trials.push({
               condition: "incongruent",
-              word: wordColor.name,
-              inkColor: inkColor.name,
-              inkCss: inkColor.css
+              word: wordCol.name,
+              inkColor: inkCol.name,
+              inkCss: inkCol.css
             });
           } else {
-            const inkColor = randomItem(CONFIG.colors);
-            const neutralWord = randomItem(CONFIG.neutralWords);
+            const inkCol = randomItem(CONFIG.colors);
+            const neutral = randomItem(CONFIG.neutralWords);
             trials.push({
               condition: "neutral",
-              word: neutralWord,
-              inkColor: inkColor.name,
-              inkCss: inkColor.css
+              word: neutral,
+              inkColor: inkCol.name,
+              inkCss: inkCol.css
             });
           }
         }
@@ -688,49 +613,38 @@
       return shuffle(trials);
     }
 
-    function setupAdminPanel() {
-      const data = {
-        timing: {
-          stimMs: CONFIG.stimDurationMs,
-          fixationMs: CONFIG.fixationMs,
-          mainTrials: CONFIG.mainTrials,
-          pauseEvery: CONFIG.pauseEvery
-        },
-        input: {
-          touchButtons: true,
-          keyboardMapping: CONFIG.colors.map(c => ({ key: c.key, color: c.name }))
-        }
-      };
-      const pre = document.createElement("pre");
-      pre.textContent = JSON.stringify(data, null, 2);
-      el.adminPanel.innerHTML = "";
-      el.adminPanel.appendChild(
-        document.createTextNode("Konfiguration (Timing & Eingabe):")
-      );
-      el.adminPanel.appendChild(pre);
+    function updateProgress() {
+      if (state.phase === "practice") {
+        el.statusProgress.textContent =
+          `Übung ${state.practiceIndex + 1} / ${CONFIG.practiceTrials}`;
+      } else if (state.phase === "main") {
+        el.statusProgress.textContent =
+          `Trial ${state.mainIndex + 1} / ${CONFIG.mainTrials}`;
+      } else {
+        el.statusProgress.textContent = "";
+      }
     }
 
     function startPractice() {
       state.phase = "practice";
-      state.practiceTrials = generateStroopTrials(CONFIG.practiceTrials);
+      state.trialsPractice = generateTrials(CONFIG.practiceTrials);
       state.practiceIndex = 0;
-      state.blockCounter = 0;
-      el.statusPhase.textContent = "Übung";
+      el.statusPhase.textContent = "Übungsblock";
       showScreen("experiment");
       nextTrial();
     }
 
     function startMain() {
       state.phase = "main";
-      state.trials = generateStroopTrials(CONFIG.mainTrials);
-      state.trialIndex = 0;
+      state.trialsMain = generateTrials(CONFIG.mainTrials);
+      state.mainIndex = 0;
       state.blockCounter = 0;
       el.statusPhase.textContent = "Hauptblock";
       showScreen("experiment");
       nextTrial();
     }
 
-    function scheduleNextTrial() {
+    function scheduleAfterFixation() {
       el.stimulus.style.display = "none";
       el.fixation.style.display = "block";
 
@@ -742,149 +656,124 @@
 
     function nextTrial() {
       state.awaitingResponse = false;
-      state.currentStimulusOnset = null;
       state.respondedThisTrial = false;
       state.currentTrial = null;
+      state.stimulusOnset = null;
 
       if (state.phase === "practice") {
-        if (state.practiceIndex >= state.practiceTrials.length) {
+        if (state.practiceIndex >= state.trialsPractice.length) {
+          // zurück zum Intro
           showScreen("intro");
-          alert("Übungsblock abgeschlossen. Du kannst nun den Hauptblock starten.");
+          alert("Übungsblock abgeschlossen. Wenn du bereit bist, starte den Hauptblock.");
           return;
         }
-        const t = state.practiceTrials[state.practiceIndex];
+        const t = state.trialsPractice[state.practiceIndex];
         state.currentTrial = { ...t, isPractice: true, index: state.practiceIndex };
-        state.practiceIndex += 1;
-        renderTrial(state.currentTrial);
+        state.practiceIndex++;
+        renderTrial();
         return;
       }
 
       if (state.phase === "main") {
-        if (state.trialIndex >= state.trials.length) {
-          finishExperiment();
-          return;
-        }
-
-        if (state.trialIndex > 0 && state.trialIndex % CONFIG.pauseEvery === 0) {
+        // Pause?
+        if (state.mainIndex > 0 && state.mainIndex % CONFIG.pauseEvery === 0) {
           state.phase = "pause";
-          state.blockCounter += 1;
-          const completed = state.trialIndex;
+          state.blockCounter++;
           el.pauseInfo.textContent =
-            `Bisher absolvierte Trials: ${completed} von ${CONFIG.mainTrials}.`;
+            `Absolvierte Trials: ${state.mainIndex} von ${CONFIG.mainTrials}.`;
           showScreen("pause");
           return;
         }
 
-        const t = state.trials[state.trialIndex];
-        state.currentTrial = { ...t, isPractice: false, index: state.trialIndex };
-        state.trialIndex += 1;
-        renderTrial(state.currentTrial);
+        if (state.mainIndex >= state.trialsMain.length) {
+          finishExperiment();
+          return;
+        }
+
+        const t = state.trialsMain[state.mainIndex];
+        state.currentTrial = { ...t, isPractice: false, index: state.mainIndex };
+        state.mainIndex++;
+        renderTrial();
         return;
       }
     }
 
-    function renderTrial(trial) {
-      el.statusCondition.textContent =
-        trial.isPractice ? "Übungstrial" : `Bedingung: ${trial.condition}`;
-      if (state.phase === "main") {
-        el.statusProgress.textContent =
-          `Trial ${trial.index + 1} / ${CONFIG.mainTrials}`;
-      } else if (state.phase === "practice") {
-        el.statusProgress.textContent =
-          `Übung ${trial.index + 1} / ${CONFIG.practiceTrials}`;
-      } else {
-        el.statusProgress.textContent = "";
-      }
+    function renderTrial() {
+      updateProgress();
 
-      el.stimulus.textContent = trial.word;
-      el.stimulus.style.color = trial.inkCss;
+      el.stimulus.textContent = state.currentTrial.word;
+      el.stimulus.style.color = state.currentTrial.inkCss;
       el.stimulus.style.display = "block";
       el.fixation.style.display = "none";
 
       state.awaitingResponse = true;
       state.respondedThisTrial = false;
-      state.currentStimulusOnset = performance.now();
+      state.stimulusOnset = performance.now();
 
       setTimeout(() => {
+        // Stimulusphase vorbei
         if (!state.respondedThisTrial) {
-          logTrialResult({ source: "none", key: null, colorName: null });
+          logTrialResult(null);
         }
         state.awaitingResponse = false;
-        scheduleNextTrial();
+        scheduleAfterFixation();
       }, CONFIG.stimDurationMs);
     }
 
-    function logTrialResult({ source, key, colorName }) {
+    function logTrialResult(pressedColorName) {
       if (!state.currentTrial) return;
-
-      const mapping = {};
-      CONFIG.colors.forEach(c => {
-        mapping[c.key] = c.name;
-      });
 
       let rt = null;
       let correct = null;
       let noResponse = false;
-      let pressedColorName = null;
-      let pressedKey = null;
 
-      if (source === "none") {
+      if (pressedColorName === null) {
         noResponse = true;
         correct = false;
-      } else if (source === "key") {
-        pressedKey = key;
-        pressedColorName = mapping[key] || null;
-        rt = performance.now() - state.currentStimulusOnset;
-        const expectedColorName = state.currentTrial.inkColor;
-        correct = pressedColorName === expectedColorName;
-      } else if (source === "touch") {
-        pressedColorName = colorName;
-        rt = performance.now() - state.currentStimulusOnset;
-        const expectedColorName = state.currentTrial.inkColor;
-        correct = pressedColorName === expectedColorName;
+      } else {
+        rt = performance.now() - state.stimulusOnset;
+        correct = pressedColorName === state.currentTrial.inkColor;
       }
 
-      const trialRecord = {
+      state.results.push({
         timestamp: new Date().toISOString(),
         phase: state.currentTrial.isPractice ? "practice" : "main",
         trialIndex: state.currentTrial.index,
         condition: state.currentTrial.condition,
         word: state.currentTrial.word,
         inkColor: state.currentTrial.inkColor,
-        responseSource: source,
-        pressedKey: pressedKey,
         pressedColor: pressedColorName,
         correct: correct,
         noResponse: noResponse,
         reactionTimeMs: rt
-      };
-
-      state.results.push(trialRecord);
+      });
     }
 
-    function handleKeydown(e) {
-      if (!state.awaitingResponse) return;
-      const key = e.key.toLowerCase();
-      const allowed = CONFIG.colors.map(c => c.key);
-      if (!allowed.includes(key)) return;
-      if (state.respondedThisTrial) return;
-
+    function handleResponse(colorName) {
+      if (!state.awaitingResponse || state.respondedThisTrial) return;
       state.respondedThisTrial = true;
-      logTrialResult({ source: "key", key, colorName: null });
-    }
-
-    function handleTouch(colorName) {
-      if (!state.awaitingResponse) return;
-      if (state.respondedThisTrial) return;
-
-      state.respondedThisTrial = true;
-      logTrialResult({ source: "touch", key: null, colorName });
+      logTrialResult(colorName);
+      // Stimulus wird vom allgemeinen Timer ausgeblendet; wir loggen nur
     }
 
     function finishExperiment() {
       state.phase = "end";
-      showScreen("end");
       computeSummary();
+      showScreen("end");
+    }
+
+    function mean(arr) {
+      if (!arr.length) return null;
+      return arr.reduce((s, x) => s + x, 0) / arr.length;
+    }
+
+    function fmtMs(ms) {
+      if (ms == null) return "–";
+      return `${Math.round(ms)} ms`;
+    }
+
+    function fmtPct(x) {
+      return `${x.toFixed(1)} %`;
     }
 
     function computeSummary() {
@@ -894,35 +783,33 @@
       const incorrect = valid.filter(r => !r.correct);
       const noResp = mainTrials.filter(r => r.noResponse);
 
-      const mean = arr => {
-        if (!arr.length) return null;
-        return arr.reduce((s, x) => s + x, 0) / arr.length;
-      };
-
-      const meanRTAllCorrect = mean(correct.map(r => r.reactionTimeMs).filter(x => x != null));
-
-      const fmtMs = ms => (ms == null ? "–" : `${Math.round(ms)} ms`);
-      const fmtPct = val => `${val.toFixed(1)} %`;
+      const meanRTCorrect = mean(
+        correct.map(r => r.reactionTimeMs).filter(v => v != null)
+      );
 
       el.sumValid.textContent = valid.length.toString();
-      el.sumRT.textContent = fmtMs(meanRTAllCorrect);
-      const errorPct = valid.length ? (incorrect.length / valid.length) * 100 : 0;
-      el.sumError.textContent = fmtPct(errorPct);
+      el.sumRT.textContent = fmtMs(meanRTCorrect);
+
+      const errPct = valid.length ? (incorrect.length / valid.length) * 100 : 0;
+      el.sumError.textContent = fmtPct(errPct);
+
       const nrPct = mainTrials.length ? (noResp.length / mainTrials.length) * 100 : 0;
       el.sumNR.textContent = `${noResp.length} (${fmtPct(nrPct)})`;
 
       const cong = correct.filter(r => r.condition === "congruent");
       const incong = correct.filter(r => r.condition === "incongruent");
-      const meanCong = mean(cong.map(r => r.reactionTimeMs));
-      const meanIncong = mean(incong.map(r => r.reactionTimeMs));
-      el.sumRTCong.textContent = fmtMs(meanCong);
-      el.sumRTIncong.textContent = fmtMs(meanIncong);
-      const interf = meanIncong != null && meanCong != null ? meanIncong - meanCong : null;
+      const mCong = mean(cong.map(r => r.reactionTimeMs));
+      const mIncong = mean(incong.map(r => r.reactionTimeMs));
+
+      el.sumRTCong.textContent = fmtMs(mCong);
+      el.sumRTIncong.textContent = fmtMs(mIncong);
+      const interf = mIncong != null && mCong != null ? mIncong - mCong : null;
       el.sumInterf.textContent = fmtMs(interf);
+      el.sumTotal.textContent = mainTrials.length.toString();
     }
 
     function downloadCSV(filename, rows) {
-      const process = v => {
+      const escapeCell = v => {
         if (v == null) return "";
         const s = String(v);
         if (s.includes(",") || s.includes('"') || s.includes("\n")) {
@@ -930,8 +817,7 @@
         }
         return s;
       };
-
-      const csv = rows.map(r => r.map(process).join(",")).join("\n");
+      const csv = rows.map(r => r.map(escapeCell).join(",")).join("\n");
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -951,8 +837,6 @@
         "condition",
         "word",
         "inkColor",
-        "responseSource",
-        "pressedKey",
         "pressedColor",
         "correct",
         "noResponse",
@@ -967,15 +851,13 @@
           r.condition,
           r.word,
           r.inkColor,
-          r.responseSource,
-          r.pressedKey,
           r.pressedColor,
           r.correct,
           r.noResponse,
           r.reactionTimeMs != null ? Math.round(r.reactionTimeMs) : ""
         ]);
       });
-      downloadCSV("stroop_trials_mobile.csv", rows);
+      downloadCSV("stroop_trials_smartphone.csv", rows);
     }
 
     function exportSummary() {
@@ -985,18 +867,13 @@
       const incorrect = valid.filter(r => !r.correct);
       const noResp = mainTrials.filter(r => r.noResponse);
 
-      const mean = arr => {
-        if (!arr.length) return null;
-        return arr.reduce((s, x) => s + x, 0) / arr.length;
-      };
-
       const cong = correct.filter(r => r.condition === "congruent");
       const incong = correct.filter(r => r.condition === "incongruent");
-      const meanCong = mean(cong.map(r => r.reactionTimeMs));
-      const meanIncong = mean(incong.map(r => r.reactionTimeMs));
-      const interf = meanIncong != null && meanCong != null ? meanIncong - meanCong : null;
+      const mCong = mean(cong.map(r => r.reactionTimeMs));
+      const mIncong = mean(incong.map(r => r.reactionTimeMs));
+      const interf = mIncong != null && mCong != null ? mIncong - mCong : null;
 
-      const summaryRows = [
+      const rows = [
         ["metric", "value"],
         ["mainTrials_total", mainTrials.length],
         ["valid_responses", valid.length],
@@ -1015,49 +892,52 @@
           "no_response_rate_percent",
           mainTrials.length ? ((noResp.length / mainTrials.length) * 100).toFixed(2) : ""
         ],
-        ["mean_rt_congruent_ms", meanCong != null ? Math.round(meanCong) : ""],
-        ["mean_rt_incongruent_ms", meanIncong != null ? Math.round(meanIncong) : ""],
-        ["interference_incong_minus_cong_ms", interf != null ? Math.round(interf) : ""]
+        ["mean_rt_congruent_ms", mCong != null ? Math.round(mCong) : ""],
+        ["mean_rt_incongruent_ms", mIncong != null ? Math.round(mIncong) : ""],
+        ["interference_ms", interf != null ? Math.round(interf) : ""]
       ];
 
-      downloadCSV("stroop_summary_mobile.csv", summaryRows);
+      downloadCSV("stroop_summary_smartphone.csv", rows);
     }
 
-    // Event-Listener
-    document.getElementById("btn-start-practice").addEventListener("click", startPractice);
-    document.getElementById("btn-start-main").addEventListener("click", startMain);
-    document.getElementById("btn-resume").addEventListener("click", () => {
-      state.phase = "main";
-      showScreen("experiment");
-      nextTrial();
-    });
-    document.getElementById("btn-download-trials").addEventListener("click", exportTrials);
-    document.getElementById("btn-download-summary").addEventListener("click", exportSummary);
+    // Event-Bindings
+    document.getElementById("btn-start-practice")
+      .addEventListener("pointerup", () => startPractice());
+    document.getElementById("btn-skip-practice")
+      .addEventListener("pointerup", () => startMain());
+    document.getElementById("btn-resume")
+      .addEventListener("pointerup", () => {
+        if (state.phase !== "pause") return;
+        state.phase = "main";
+        el.statusPhase.textContent = "Hauptblock";
+        showScreen("experiment");
+        nextTrial();
+      });
+    document.getElementById("btn-download-trials")
+      .addEventListener("pointerup", exportTrials);
+    document.getElementById("btn-download-summary")
+      .addEventListener("pointerup", exportSummary);
 
-    document.getElementById("btn-toggle-admin").addEventListener("click", () => {
-      const panel = el.adminPanel;
-      panel.style.display = panel.style.display === "block" ? "none" : "block";
-    });
-
-    document.getElementById("btn-enter-fullscreen").addEventListener("click", () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(() => {});
-      } else {
-        document.exitFullscreen().catch(() => {});
-      }
-    });
-
-    document.addEventListener("keydown", handleKeydown);
-
-    // Touch-Buttons
     document.querySelectorAll(".resp-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("pointerup", () => {
         const colorName = btn.getAttribute("data-color");
-        handleTouch(colorName);
+        handleResponse(colorName);
       });
     });
 
-    setupAdminPanel();
+    // Optional: Tastatur als Fallback (Desktop)
+    document.addEventListener("keydown", e => {
+      const keyMap = {
+        r: "RED",
+        g: "GREEN",
+        b: "BLUE",
+        y: "YELLOW"
+      };
+      const color = keyMap[e.key.toLowerCase()];
+      if (color) {
+        handleResponse(color);
+      }
+    });
   </script>
 </body>
 </html>
