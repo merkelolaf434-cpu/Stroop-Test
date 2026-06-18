@@ -358,7 +358,6 @@
     </header>
 
     <main>
-      <!-- Intro -->
       <section id="screen-intro" class="screen active">
         <div class="scroll">
           <h2>Kurze Anleitung</h2>
@@ -392,7 +391,6 @@
         </div>
       </section>
 
-      <!-- Experiment -->
       <section id="screen-experiment" class="screen">
         <div class="status-row">
           <div class="pill">
@@ -419,7 +417,6 @@
         </p>
       </section>
 
-      <!-- Pause -->
       <section id="screen-pause" class="screen">
         <div class="scroll">
           <h2>Kurze Pause</h2>
@@ -435,7 +432,6 @@
         </div>
       </section>
 
-      <!-- End -->
       <section id="screen-end" class="screen">
         <div class="scroll">
           <h2>Test abgeschlossen</h2>
@@ -518,6 +514,7 @@
       trialsMain: [],
       practiceIndex: 0,
       mainIndex: 0,
+      lastPauseIndex: 0, // NEU: Verhindert die Endlosschleife im Pausenmenü
       currentTrial: null,
       awaitingResponse: false,
       respondedThisTrial: false,
@@ -638,6 +635,7 @@
       state.phase = "main";
       state.trialsMain = generateTrials(CONFIG.mainTrials);
       state.mainIndex = 0;
+      state.lastPauseIndex = 0; // NEU: Wird beim Start des Hauptblocks zurückgesetzt
       state.blockCounter = 0;
       el.statusPhase.textContent = "Hauptblock";
       showScreen("experiment");
@@ -662,7 +660,6 @@
 
       if (state.phase === "practice") {
         if (state.practiceIndex >= state.trialsPractice.length) {
-          // zurück zum Intro
           showScreen("intro");
           alert("Übungsblock abgeschlossen. Wenn du bereit bist, starte den Hauptblock.");
           return;
@@ -675,9 +672,10 @@
       }
 
       if (state.phase === "main") {
-        // Pause?
-        if (state.mainIndex > 0 && state.mainIndex % CONFIG.pauseEvery === 0) {
+        // GEÄNDERT: Prüft nun zusätzlich, ob state.mainIndex != state.lastPauseIndex ist
+        if (state.mainIndex > 0 && state.mainIndex % CONFIG.pauseEvery === 0 && state.mainIndex !== state.lastPauseIndex) {
           state.phase = "pause";
+          state.lastPauseIndex = state.mainIndex; // Speichert den Index der letzten Pause
           state.blockCounter++;
           el.pauseInfo.textContent =
             `Absolvierte Trials: ${state.mainIndex} von ${CONFIG.mainTrials}.`;
@@ -711,7 +709,6 @@
       state.stimulusOnset = performance.now();
 
       setTimeout(() => {
-        // Stimulusphase vorbei
         if (!state.respondedThisTrial) {
           logTrialResult(null);
         }
@@ -753,7 +750,6 @@
       if (!state.awaitingResponse || state.respondedThisTrial) return;
       state.respondedThisTrial = true;
       logTrialResult(colorName);
-      // Stimulus wird vom allgemeinen Timer ausgeblendet; wir loggen nur
     }
 
     function finishExperiment() {
@@ -900,13 +896,13 @@
       downloadCSV("stroop_summary_smartphone.csv", rows);
     }
 
-    // Event-Bindings
+    // GEÄNDERT: Von "pointerup" auf "click" umgestellt (robuster auf allen Geräten)
     document.getElementById("btn-start-practice")
-      .addEventListener("pointerup", () => startPractice());
+      .addEventListener("click", () => startPractice());
     document.getElementById("btn-skip-practice")
-      .addEventListener("pointerup", () => startMain());
+      .addEventListener("click", () => startMain());
     document.getElementById("btn-resume")
-      .addEventListener("pointerup", () => {
+      .addEventListener("click", () => {
         if (state.phase !== "pause") return;
         state.phase = "main";
         el.statusPhase.textContent = "Hauptblock";
@@ -914,12 +910,12 @@
         nextTrial();
       });
     document.getElementById("btn-download-trials")
-      .addEventListener("pointerup", exportTrials);
+      .addEventListener("click", exportTrials);
     document.getElementById("btn-download-summary")
-      .addEventListener("pointerup", exportSummary);
+      .addEventListener("click", exportSummary);
 
     document.querySelectorAll(".resp-btn").forEach(btn => {
-      btn.addEventListener("pointerup", () => {
+      btn.addEventListener("click", () => {
         const colorName = btn.getAttribute("data-color");
         handleResponse(colorName);
       });
