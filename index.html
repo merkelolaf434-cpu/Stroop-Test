@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Farb-Wort Stroop Test – Smartphone</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
   <style>
     :root {
       --bg: #f5f5f7;
@@ -30,6 +30,7 @@
 
     html, body {
       height: 100%;
+      overscroll-behavior-y: none; 
     }
 
     body {
@@ -54,6 +55,7 @@
       display: flex;
       flex-direction: column;
       padding: 14px 14px 10px;
+      position: relative; /* Wichtig für das Modal */
     }
 
     header {
@@ -156,16 +158,6 @@
       border: 1px solid #e5e5ea;
     }
 
-    kbd {
-      font-family: "SF Mono", Menlo, Consolas, monospace;
-      font-size: 0.75rem;
-      padding: 3px 6px;
-      border-radius: 6px;
-      border: 1px solid #d2d2d7;
-      background: #ffffff;
-      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
-    }
-
     .btn-row {
       display: flex;
       flex-wrap: wrap;
@@ -186,7 +178,9 @@
       gap: 6px;
       transition: transform 120ms ease, box-shadow 120ms ease,
         background 120ms ease, color 120ms ease;
-      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     button:focus-visible {
@@ -280,7 +274,7 @@
     }
 
     .resp-btn {
-      min-height: 54px; /* >= 44x44px Touch-Target */
+      min-height: 54px; 
       border-radius: 14px;
       border: 1px solid #d2d2d7;
       font-size: 0.95rem;
@@ -326,16 +320,94 @@
     }
 
     .summary-card h3 {
-      font-size: 0.7rem;
-      letter-spacing: 0.06em;
+      font-size: 0.65rem;
+      letter-spacing: 0.03em;
       text-transform: uppercase;
       color: var(--text-muted);
       margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
     .summary-card p {
       font-size: 0.9rem;
       color: var(--text);
+    }
+
+    /* Neu: Info-Icon Styling */
+    .info-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #d2d2d7;
+      color: #ffffff;
+      font-size: 0.6rem;
+      font-weight: bold;
+      font-family: serif;
+      cursor: pointer;
+      font-style: normal;
+    }
+
+    /* Neu: Modal Styling (Textfeld) */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
+      display: none; /* Standardmäßig ausgeblendet */
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex; /* Einblenden */
+    }
+
+    .modal-box {
+      background: var(--surface);
+      padding: 20px;
+      border-radius: var(--radius-md);
+      max-width: 320px;
+      width: 100%;
+      position: relative;
+      box-shadow: var(--shadow-soft);
+      animation: popIn 0.2s ease-out forwards;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      border: none;
+      background: transparent;
+      padding: 5px;
+      line-height: 1;
+    }
+
+    .modal-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 1rem;
+      padding-right: 20px; /* Platz fürs X lassen */
+    }
+
+    .modal-text {
+      font-size: 0.85rem;
+      color: var(--text);
+      line-height: 1.4;
     }
 
     @media (min-width: 480px) {
@@ -350,7 +422,7 @@
   <div class="app">
     <header>
       <h1>Farb-Wort Stroop Test</h1>
-      <p>Smartphone-optimierte Umsetzung des mental-fatigue-Stroop-Protokolls (Ilbak&nbsp;et&nbsp;al., 2026).</p>
+      <p>Smartphone-optimierte Umsetzung des mental-fatigue-Stroop-Protokolls.</p>
       <div class="meta-pill">
         <span class="meta-dot"></span>
         <span>≈ 30&nbsp;min · 1.100 Versuche</span>
@@ -369,7 +441,7 @@
           <p class="note">
             Jede Reizpräsentation dauert 1.000&nbsp;ms, danach folgt ein Fixationskreuz für 636&nbsp;ms.
             Insgesamt werden 1.100 Trials in zufälliger Reihenfolge aus kongruenten, inkongruenten und neutralen
-            Bedingungen präsentiert – entsprechend der Studienbeschreibung. [file:13]
+            Bedingungen präsentiert.
           </p>
 
           <p style="margin-top:8px;">Die Farb-Buttons:</p>
@@ -379,10 +451,6 @@
             <div class="kbd-map"><span style="display:inline-block;width:10px;height:10px;border-radius:999px;background:#007aff;"></span> <span>Blau</span></div>
             <div class="kbd-map"><span style="display:inline-block;width:10px;height:10px;border-radius:999px;background:#ffcc00;"></span> <span>Gelb</span></div>
           </div>
-
-          <p class="note">
-            Hinweis: Der Test ist für Smartphones optimiert (große Touch-Buttons ≥ 44×44&nbsp;px), funktioniert aber auch am Laptop. [web:39][web:42][web:48][web:51]
-          </p>
         </div>
 
         <div class="btn-row">
@@ -406,10 +474,10 @@
         </div>
 
         <div class="response-bar">
-          <button class="resp-btn resp-red" data-color="RED"><span>Rot</span></button>
-          <button class="resp-btn resp-green" data-color="GREEN"><span>Grün</span></button>
-          <button class="resp-btn resp-blue" data-color="BLUE"><span>Blau</span></button>
-          <button class="resp-btn resp-yellow" data-color="YELLOW"><span>Gelb</span></button>
+          <button class="resp-btn resp-red" data-color="ROT"><span>Rot</span></button>
+          <button class="resp-btn resp-green" data-color="GRÜN"><span>Grün</span></button>
+          <button class="resp-btn resp-blue" data-color="BLAU"><span>Blau</span></button>
+          <button class="resp-btn resp-yellow" data-color="GELB"><span>Gelb</span></button>
         </div>
 
         <p class="bottom-note">
@@ -442,57 +510,131 @@
 
           <div class="summary-grid">
             <div class="summary-card">
-              <h3>Gültige Antworten</h3>
+              <h3><span>Gültige Antworten</span> <i class="info-icon" data-info="valid">i</i></h3>
               <p id="sum-valid">–</p>
             </div>
             <div class="summary-card">
-              <h3>Ø RT korrekt</h3>
+              <h3><span>Ø Zeit gesamt</span> <i class="info-icon" data-info="rt">i</i></h3>
               <p id="sum-rt">–</p>
             </div>
             <div class="summary-card">
-              <h3>Fehlerquote</h3>
+              <h3><span>Fehlerquote</span> <i class="info-icon" data-info="error">i</i></h3>
               <p id="sum-error">–</p>
             </div>
             <div class="summary-card">
-              <h3>No-Response</h3>
+              <h3><span>Verpasst</span> <i class="info-icon" data-info="nr">i</i></h3>
               <p id="sum-nr">–</p>
             </div>
           </div>
 
           <div class="summary-grid" style="margin-top:8px;">
             <div class="summary-card">
-              <h3>RT kongruent</h3>
+              <h3><span>Reaktionszeit (Gleich)</span> <i class="info-icon" data-info="cong">i</i></h3>
               <p id="sum-rt-cong">–</p>
             </div>
             <div class="summary-card">
-              <h3>RT inkongruent</h3>
+              <h3><span>Reaktionszeit (Ungleich)</span> <i class="info-icon" data-info="incong">i</i></h3>
               <p id="sum-rt-incong">–</p>
             </div>
             <div class="summary-card">
-              <h3>Interferenz</h3>
+              <h3><span>Zeitunterschied</span> <i class="info-icon" data-info="interf">i</i></h3>
               <p id="sum-interf">–</p>
             </div>
             <div class="summary-card">
-              <h3>Trials gesamt</h3>
+              <h3><span>Trials gesamt</span> <i class="info-icon" data-info="total">i</i></h3>
               <p id="sum-total">–</p>
             </div>
           </div>
-
-          <p class="note" style="margin-top:8px;">
-            Protokoll-nahe Umsetzung: 1.100 Trials, 1.000&nbsp;ms Stimulus, 636&nbsp;ms Fixation, vier Farben und drei Bedingungen (kongruent, inkongruent, neutral), ungef. 30&nbsp;Minuten Dauer. [file:13]
-          </p>
         </div>
 
         <div class="btn-row">
-          <button id="btn-download-trials" class="btn-primary">Trial-Daten (CSV)</button>
-          <button id="btn-download-summary" class="btn-secondary">Summary (CSV)</button>
+          <button id="btn-download-trials" class="btn-primary">Test-Daten (CSV)</button>
+          <button id="btn-download-summary" class="btn-primary">Übersicht (CSV)</button>
+          <button id="btn-restart" class="btn-secondary" style="width: 100%;">Zurück zum Anfang</button>
         </div>
       </section>
     </main>
+
+    <div id="info-modal" class="modal-overlay">
+      <div class="modal-box">
+        <button id="modal-close" class="modal-close">✕</button>
+        <div id="modal-title" class="modal-title">Titel</div>
+        <div id="modal-text" class="modal-text">Erklärungstext...</div>
+      </div>
+    </div>
   </div>
 
   <script>
-    // Konfiguration (angepasst an das Protokoll von Ilbak et al. 2026) [file:13]
+    // Info-Texte für das Modal
+    const infoExplanations = {
+      valid: {
+        title: "Gültige Antworten",
+        text: "Die Anzahl der Versuche, bei denen du rechtzeitig eine Farbe ausgewählt hast (egal ob richtig oder falsch)."
+      },
+      rt: {
+        title: "Ø Zeit gesamt",
+        text: "Deine durchschnittliche Reaktionszeit bei allen richtigen Antworten."
+      },
+      error: {
+        title: "Fehlerquote",
+        text: "Der Prozentsatz der Versuche, bei denen du auf die falsche Farbe getippt hast."
+      },
+      nr: {
+        title: "Verpasst (No-Response)",
+        text: "Die Anzahl der Versuche, bei denen du nicht innerhalb der erlaubten 1.000 Millisekunden geantwortet hast."
+      },
+      cong: {
+        title: "Reaktionszeit (Gleich)",
+        text: "Deine durchschnittliche Zeit, wenn Wort und Schriftfarbe gleich waren (z. B. das Wort ROT in roter Schrift). Hier ist das Gehirn am schnellsten."
+      },
+      incong: {
+        title: "Reaktionszeit (Ungleich)",
+        text: "Deine durchschnittliche Zeit, wenn Wort und Schriftfarbe unterschiedlich waren (z. B. das Wort ROT in blauer Schrift). Hier muss das Gehirn den Lese-Reflex unterdrücken."
+      },
+      interf: {
+        title: "Zeitunterschied (Stroop-Effekt)",
+        text: "Die Differenz zwischen 'Ungleich' und 'Gleich'. Ein höherer Wert zeigt, dass dich die abweichenden Farben stärker verlangsamt haben."
+      },
+      total: {
+        title: "Trials gesamt",
+        text: "Die Gesamtzahl aller durchgeführten Versuche (inklusive verpasster Antworten) im Hauptdurchlauf."
+      }
+    };
+
+    // Modal Logik
+    const modal = document.getElementById("info-modal");
+    const modalTitle = document.getElementById("modal-title");
+    const modalText = document.getElementById("modal-text");
+    const modalClose = document.getElementById("modal-close");
+
+    // Öffnen durch Klick auf das "i"
+    document.querySelectorAll(".info-icon").forEach(icon => {
+      icon.addEventListener("click", (e) => {
+        const infoKey = icon.getAttribute("data-info");
+        const data = infoExplanations[infoKey];
+        
+        if(data) {
+          modalTitle.textContent = data.title;
+          modalText.textContent = data.text;
+          modal.classList.add("active");
+        }
+      });
+    });
+
+    // Schließen durch Klick auf das "X"
+    modalClose.addEventListener("click", () => {
+      modal.classList.remove("active");
+    });
+
+    // Schließen durch Klick außerhalb der weißen Box
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.classList.remove("active");
+      }
+    });
+
+
+    // Konfiguration (Deutsche Begriffe eingefügt)
     const CONFIG = {
       practiceTrials: 12,
       mainTrials: 1100,
@@ -500,12 +642,12 @@
       stimDurationMs: 1000,
       fixationMs: 636,
       colors: [
-        { name: "RED", css: "#ff3b30", label: "Rot" },
-        { name: "GREEN", css: "#34c759", label: "Grün" },
-        { name: "BLUE", css: "#007aff", label: "Blau" },
-        { name: "YELLOW", css: "#ffcc00", label: "Gelb" }
+        { name: "ROT", css: "#ff3b30", label: "Rot" },
+        { name: "GRÜN", css: "#34c759", label: "Grün" },
+        { name: "BLAU", css: "#007aff", label: "Blau" },
+        { name: "GELB", css: "#ffcc00", label: "Gelb" }
       ],
-      neutralWords: ["XXXX", "BOOK", "HOUSE", "CHAIR"]
+      neutralWords: ["XXXX", "BUCH", "HAUS", "STUHL"]
     };
 
     const state = {
@@ -514,7 +656,7 @@
       trialsMain: [],
       practiceIndex: 0,
       mainIndex: 0,
-      lastPauseIndex: 0, // NEU: Verhindert die Endlosschleife im Pausenmenü
+      lastPauseIndex: 0,
       currentTrial: null,
       awaitingResponse: false,
       respondedThisTrial: false,
@@ -635,11 +777,27 @@
       state.phase = "main";
       state.trialsMain = generateTrials(CONFIG.mainTrials);
       state.mainIndex = 0;
-      state.lastPauseIndex = 0; // NEU: Wird beim Start des Hauptblocks zurückgesetzt
+      state.lastPauseIndex = 0;
       state.blockCounter = 0;
       el.statusPhase.textContent = "Hauptblock";
       showScreen("experiment");
       nextTrial();
+    }
+
+    function resetExperiment() {
+      state.phase = "intro";
+      state.trialsPractice = [];
+      state.trialsMain = [];
+      state.practiceIndex = 0;
+      state.mainIndex = 0;
+      state.lastPauseIndex = 0;
+      state.currentTrial = null;
+      state.awaitingResponse = false;
+      state.respondedThisTrial = false;
+      state.stimulusOnset = null;
+      state.results = [];
+      state.blockCounter = 0;
+      showScreen("intro");
     }
 
     function scheduleAfterFixation() {
@@ -672,10 +830,9 @@
       }
 
       if (state.phase === "main") {
-        // GEÄNDERT: Prüft nun zusätzlich, ob state.mainIndex != state.lastPauseIndex ist
         if (state.mainIndex > 0 && state.mainIndex % CONFIG.pauseEvery === 0 && state.mainIndex !== state.lastPauseIndex) {
           state.phase = "pause";
-          state.lastPauseIndex = state.mainIndex; // Speichert den Index der letzten Pause
+          state.lastPauseIndex = state.mainIndex;
           state.blockCounter++;
           el.pauseInfo.textContent =
             `Absolvierte Trials: ${state.mainIndex} von ${CONFIG.mainTrials}.`;
@@ -896,38 +1053,34 @@
       downloadCSV("stroop_summary_smartphone.csv", rows);
     }
 
-    // GEÄNDERT: Von "pointerup" auf "click" umgestellt (robuster auf allen Geräten)
-    document.getElementById("btn-start-practice")
-      .addEventListener("click", () => startPractice());
-    document.getElementById("btn-skip-practice")
-      .addEventListener("click", () => startMain());
-    document.getElementById("btn-resume")
-      .addEventListener("click", () => {
-        if (state.phase !== "pause") return;
-        state.phase = "main";
-        el.statusPhase.textContent = "Hauptblock";
-        showScreen("experiment");
-        nextTrial();
-      });
-    document.getElementById("btn-download-trials")
-      .addEventListener("click", exportTrials);
-    document.getElementById("btn-download-summary")
-      .addEventListener("click", exportSummary);
+    document.getElementById("btn-start-practice").addEventListener("click", () => startPractice());
+    document.getElementById("btn-skip-practice").addEventListener("click", () => startMain());
+    document.getElementById("btn-resume").addEventListener("click", () => {
+      if (state.phase !== "pause") return;
+      state.phase = "main";
+      el.statusPhase.textContent = "Hauptblock";
+      showScreen("experiment");
+      nextTrial();
+    });
+    
+    document.getElementById("btn-download-trials").addEventListener("click", exportTrials);
+    document.getElementById("btn-download-summary").addEventListener("click", exportSummary);
+    document.getElementById("btn-restart").addEventListener("click", resetExperiment);
 
     document.querySelectorAll(".resp-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("pointerdown", (e) => {
+        e.preventDefault(); 
         const colorName = btn.getAttribute("data-color");
         handleResponse(colorName);
       });
     });
 
-    // Optional: Tastatur als Fallback (Desktop)
     document.addEventListener("keydown", e => {
       const keyMap = {
-        r: "RED",
-        g: "GREEN",
-        b: "BLUE",
-        y: "YELLOW"
+        r: "ROT",
+        g: "GRÜN",
+        b: "BLAU",
+        y: "GELB"
       };
       const color = keyMap[e.key.toLowerCase()];
       if (color) {
